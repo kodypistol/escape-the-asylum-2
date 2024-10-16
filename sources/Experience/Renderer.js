@@ -32,16 +32,20 @@ export default class Renderer {
     this.instance = new THREE.WebGLRenderer({
       alpha: false,
       antialias: false,
+      preserveDrawingBuffer: true
     });
     this.instance.domElement.style.position = "absolute";
     this.instance.domElement.style.top = 0;
     this.instance.domElement.style.left = 0;
-    this.instance.domElement.style.width = "100%";
-    this.instance.domElement.style.height = "100%";
 
     this.instance.setClearColor(this.clearColor, 1);
-    this.instance.setSize(this.config.width, this.config.height);
+    // set canvas resolution to playstation 1 resolution
+    this.instance.setSize(this.config.width, this.config.width);
     this.instance.setPixelRatio(this.config.pixelRatio);
+
+    // resize canvas to fit the screen
+    this.instance.domElement.style.width = "100%";
+    this.instance.domElement.style.height = "100%";
 
     this.instance.physicallyCorrectLights = true;
     // this.instance.gammaOutPut = true

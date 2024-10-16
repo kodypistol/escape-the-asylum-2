@@ -71,12 +71,14 @@ export default class Experience {
         this.config.debug = window.location.hash === '#debug';
 
         // Pixel ratio
-        this.config.pixelRatio = 0.2;
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2);
 
         // Width and height
         const boundings = this.targetElement.getBoundingClientRect();
-        this.config.width = boundings.width;
-        this.config.height = boundings.height || window.innerHeight;
+        // this.config.width = boundings.width;
+        // this.config.height = boundings.height || window.innerHeight;
+        this.config.width = 320;
+        this.config.height = 240;
     }
 
     setDebug() {
@@ -147,8 +149,9 @@ export default class Experience {
 
         if (this.camera) this.camera.resize();
 
-        destroy();
-        {
-        }
+    }
+
+    destroy()
+    {
     }
 }
