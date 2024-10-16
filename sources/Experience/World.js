@@ -1,44 +1,45 @@
-import * as THREE from 'three'
-import Experience from './Experience.js'
+import * as THREE from "three";
+import Experience from "./Experience.js";
 
-export default class World
-{
-    constructor(_options)
-    {
-        this.experience = new Experience()
-        this.config = this.experience.config
-        this.scene = this.experience.scene
-        this.resources = this.experience.resources
-        
-        this.resources.on('groupEnd', (_group) =>
-        {
-            if(_group.name === 'base')
-            {
-                this.setDummy()
-            }
-        })
-    }
+export default class World {
+  constructor(_options) {
+    this.experience = new Experience();
+    this.config = this.experience.config;
+    this.scene = this.experience.scene;
+    this.resources = this.experience.resources;
 
-    setDummy()
-    {
-        this.resources.items.lennaTexture.encoding = THREE.sRGBEncoding
-        
-        const cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({ map: this.resources.items.lennaTexture })
-        )
-        this.scene.add(cube)        
-    }
+    this.resources.on("groupEnd", (_group) => {
+      if (_group.name === "base") {
+        this.setDummy();
+      }
+    });
+  }
 
-    resize()
-    {
-    }
+  setDummy() {
+    this.pigeon = this.resources.items.pigeonModel.scene;
+    this.pigeonTexture = this.resources.items.pigeonTexture;
+    this.pigeonTexture.flipY = false;
+    this.pigeonTexture.minFilter = THREE.NearestFilter;
+    this.pigeonTexture.magFilter = THREE.NearestFilter;
 
-    update()
-    {
-    }
+    this.pigeon.traverse((_child) => {
+      if (_child.isMesh) {
+        _child.material = new THREE.MeshBasicMaterial({
+          map: this.pigeonTexture,
+        });
+      }
+    });
 
-    destroy()
-    {
+    this.scene.add(this.pigeon);
+  }
+
+  resize() {}
+
+  update() {
+    if (this.pigeon) {
+      this.pigeon.rotation.y += 0.005;
     }
+  }
+
+  destroy() {}
 }
