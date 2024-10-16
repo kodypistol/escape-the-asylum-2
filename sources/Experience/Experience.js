@@ -30,19 +30,23 @@ export default class Experience {
             return;
         }
 
-        this.time = new Time();
-        this.sizes = new Sizes();
-        this.clicCount = 0;
-        this.clicCountElement = document.querySelector('#count');
-        this.axis = new AxisManager();
-        this.setConfig();
-        this.setDebug();
-        this.setStats();
-        this.setScene();
-        this.setCamera();
-        this.setRenderer();
-        this.setResources();
-        this.setWorld();
+        this.time = new Time()
+        this.sizes = new Sizes()
+
+        this.axis = new AxisManager()
+        this.countElements = [
+          document.querySelector('#countPlayer1'),
+          document.querySelector('#countPlayer2')
+        ]
+
+        this.setConfig()
+        this.setDebug()
+        this.setStats()
+        this.setScene()
+        this.setCamera()
+        this.setRenderer()
+        this.setResources()
+        this.setWorld()
 
         this.sizes.on('resize', () => {
             this.resize();
@@ -88,12 +92,6 @@ export default class Experience {
     setDebug() {
         if (this.config.debug) {
             this.debug = new GUI();
-        }
-    }
-
-    setStats() {
-        if (this.config.debug) {
-            this.stats = new Stats(true);
         }
     }
 
