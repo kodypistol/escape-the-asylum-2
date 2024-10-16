@@ -71,7 +71,7 @@ export default class Experience {
         this.config.debug = window.location.hash === '#debug';
 
         // Pixel ratio
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2);
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1);
 
         // Width and height
         const boundings = this.targetElement.getBoundingClientRect();
