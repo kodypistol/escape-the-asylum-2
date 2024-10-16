@@ -9,7 +9,6 @@ import Resources from './Resources.js';
 import Renderer from './Renderer.js';
 import Camera from './Camera.js';
 import World from './World.js';
-import AxisManager from './Axis';
 
 import assets from './assets.js';
 
@@ -32,9 +31,6 @@ export default class Experience {
 
         this.time = new Time();
         this.sizes = new Sizes();
-        this.clicCount = 0;
-        this.clicCountElement = document.querySelector('#count');
-        this.axis = new AxisManager();
         this.setConfig();
         this.setDebug();
         this.setStats();
@@ -43,19 +39,6 @@ export default class Experience {
         this.setRenderer();
         this.setResources();
         this.setWorld();
-
-        this.sizes.on('resize', () => {
-            this.resize();
-        });
-
-        this.update();
-    }
-
-    setConfig() {
-        this.config = {};
-
-        // Debug
-        this.config.debug = window.location.hash === '#debug';
 
         this.sizes.on('resize', () => {
             this.resize();
@@ -82,12 +65,6 @@ export default class Experience {
     setDebug() {
         if (this.config.debug) {
             this.debug = new GUI();
-        }
-    }
-
-    setStats() {
-        if (this.config.debug) {
-            this.stats = new Stats(true);
         }
     }
 
@@ -128,10 +105,6 @@ export default class Experience {
 
         if (this.renderer) this.renderer.update();
 
-        if (this.world) this.world.update();
-
-        if (this.renderer) this.renderer.update();
-
         window.requestAnimationFrame(() => {
             this.update();
         });
@@ -143,12 +116,12 @@ export default class Experience {
         this.config.width = boundings.width;
         this.config.height = boundings.height;
 
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2);
-
         if (this.camera) this.camera.resize();
 
-        destroy();
-        {
-        }
+        if (this.renderer) this.renderer.resize();
+
+        if (this.world) this.world.resize();
     }
+
+    destroy() {}
 }
