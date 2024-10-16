@@ -36,9 +36,13 @@ export default class Experience
 
         this.time = new Time()
         this.sizes = new Sizes()
-        this.clicCount = 0
-        this.clicCountElement = document.querySelector('#count')
+
         this.axis = new AxisManager()
+        this.countElements = [
+          document.querySelector('#countPlayer1'),
+          document.querySelector('#countPlayer2')
+        ]
+
         this.setConfig()
         this.setDebug()
         this.setStats()
