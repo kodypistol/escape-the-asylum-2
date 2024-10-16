@@ -1,5 +1,4 @@
 # Three.js - Template - Complex
- ok ok
 🚧 This template is under construction
 
 ## Setup
