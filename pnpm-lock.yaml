@@ -26,6 +26,10 @@ importers:
       vite:
         specifier: ^5.4.9
         version: 5.4.9(stylus@0.63.0)
+    devDependencies:
+      '@plutotcool/prettier-config':
+        specifier: ^1.0.0
+        version: 1.0.0
 
 packages:
 
@@ -169,6 +173,9 @@ packages:
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
+
+  '@plutotcool/prettier-config@1.0.0':
+    resolution: {integrity: sha512-al8HxUI9wlcQy3cYVEfF0RrRQDJJfSt5r8PfdsN2ueD6iV8J7rLhQbJ13QYfQ0Ajzt5UMTxVWucmEluILBosGA==}
 
   '@rollup/rollup-android-arm-eabi@4.24.0':
     resolution: {integrity: sha512-Q6HJd7Y6xdB48x8ZNVDOqsbh2uByBhgK8PiQgPhwkIw/HC/YX5Ghq2mQY5sRMZWHb3VsFkWooUVOZHKr7DmDIA==}
@@ -485,6 +492,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.21.5':
     optional: true
+
+  '@plutotcool/prettier-config@1.0.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.24.0':
     optional: true

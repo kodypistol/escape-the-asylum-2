@@ -27,7 +27,9 @@ export default class World
             new THREE.BoxGeometry(1, 1, 1),
             new THREE.MeshBasicMaterial({ map: this.resources.items.lennaTexture })
         )
-        this.scene.add(cube)        
+        this.scene.add(cube)
+
+        console.log('i try to access axis', this.experience.axis)
     }
 
     resize()
