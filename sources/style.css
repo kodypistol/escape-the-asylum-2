@@ -11,6 +11,10 @@ body
     overflow: hidden;
 }
 
+canvas {
+    image-rendering: pixelated;
+}
+
 .experience
 {
     position: fixed;

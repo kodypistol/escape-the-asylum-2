@@ -74,10 +74,14 @@ export default class Experience {
         this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1);
 
         // Width and height
-        const boundings = this.targetElement.getBoundingClientRect();
+        // const boundings = this.targetElement.getBoundingClientRect();
         // this.config.width = boundings.width;
         // this.config.height = boundings.height || window.innerHeight;
-        this.config.width = 320;
+        // this.config.width = 320;
+        // this.config.height = 240;
+
+        // set canvas resolution to playstation 1 resolution but keep the screen ratio
+        this.config.width = 320;    
         this.config.height = 240;
     }
 
@@ -145,7 +149,7 @@ export default class Experience {
         this.config.width = boundings.width;
         this.config.height = boundings.height;
 
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2);
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1);
 
         if (this.camera) this.camera.resize();
 
