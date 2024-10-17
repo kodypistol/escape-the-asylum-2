@@ -12,6 +12,7 @@ export default class World {
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
 
+
         this.shaderManager = new ShaderManager();
         this.sceneManager = new SceneManager(this.scene, this.resources);
         this.playerManager = new PlayerManager(this.experience.axis.instance);
@@ -21,6 +22,42 @@ export default class World {
                 this.setDummy();
             }
         });
+
+        this.setPlayers();
+    }
+
+  handlePlayerCount(playerId, event) {
+    if (event.key === "a" || event.key === "x") {
+      const playerIndex = playerId - 1
+      const players = this.players
+
+      players[playerIndex].count++
+      this.experience.countElements[playerIndex].textContent = players[playerIndex].count
+
+      this.playerModels[playerIndex].position.z += 0.2
+    }
+  }
+
+    detectPlayer2OutOfFOV() {
+        // Check if player 2 is out of camera FOV
+        const frustum = new THREE.Frustum();
+        const camera = this.experience.camera.instance;
+        const projectionMatrix = camera.projectionMatrix.clone();
+        const viewMatrix = camera.matrixWorldInverse.clone();
+
+        frustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(projectionMatrix, viewMatrix));
+
+        // Check the position of Player 2's head
+        const headOffset = 3; // Adjust this based on your model
+        const headPosition = new THREE.Vector3(this.p2.position.x, this.p2.position.y + headOffset, this.p2.position.z);
+
+        if (!frustum.containsPoint(headPosition) && !this.player2OutOfFOV) {
+            this.player2OutOfFOV = true; // Set flag to true
+            console.log("Player 1 wins! Player 2 is out of view.");
+            // You may want to add additional logic here, like resetting the game or ending it.
+        } else if (frustum.containsPoint(headPosition) && this.player2OutOfFOV) {
+            this.player2OutOfFOV = false; // Reset the flag if Player 2 comes back into view
+        }
     }
 
     setDummy() {
@@ -86,5 +123,7 @@ export default class World {
                 player.update(delta);
             });
         }
+
+        this.detectPlayer2OutOfFOV()
     }
 }
