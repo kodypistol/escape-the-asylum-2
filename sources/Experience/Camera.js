@@ -43,9 +43,6 @@ export default class Camera {
     this.modes.default.instance.position.set(0, 3, -5);
     this.modes.default.instance.lookAt(0, 0, 0);
 
-    this.instance.position.copy(this.modes[this.mode].instance.position);
-    this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
-
     // Debug
     this.modes.debug = {};
     this.modes.debug.instance = this.instance.clone();
@@ -62,6 +59,9 @@ export default class Camera {
     this.modes.debug.orbitControls.zoomSpeed = 1;
     this.modes.debug.orbitControls.enableDamping = true;
     this.modes.debug.orbitControls.update();
+
+    this.instance.position.copy(this.modes[this.mode].instance.position);
+    this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
   }
 
   resize() {
