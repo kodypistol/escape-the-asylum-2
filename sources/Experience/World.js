@@ -3,24 +3,44 @@ import * as THREE from 'three'
 import Experience from './Experience.js'
 import Player from "./Player";
 
-export default class World {
-  constructor(_options) {
-    this.experience = new Experience()
-    this.axis = this.experience.axis
-    this.config = this.experience.config
-    this.scene = this.experience.scene
-    this.resources = this.experience.resources
-    this.offsetFactorPosition = 0.01
+export default class World
+{
+    constructor(_options)
+    {
+        this.experience = new Experience()
+        this.axis = this.experience.axis
+        this.config = this.experience.config
+        this.scene = this.experience.scene
+        this.resources = this.experience.resources
 
-    this.resources.on('groupEnd', (_group) => {
-      if (_group.name === 'base') {
-        this.setDummy()
-      }
-    })
+        this.vertexSnapping();
 
-    this.setPlayers()
-  }
+        this.resources.on('groupEnd', (_group) => {
+            if (_group.name === 'base') {
+                this.setDummy();
+            }
+        });
 
+        this.setPlayers();
+    }
+
+    vertexSnapping() {
+        // Define the resolution
+        const resolution = new THREE.Vector2(320, 240);
+
+        // Replace existing THREE vertex shader to apply snapping to all objects across the scene
+        THREE.ShaderChunk.project_vertex = THREE.ShaderChunk.project_vertex.replace(
+            'gl_Position = projectionMatrix * mvPosition;',
+            `
+            // PS1 Vertex Snapping
+            vec4 pos = projectionMatrix * mvPosition;
+            pos.xyz /= pos.w;
+            pos.xy = floor(vec2(${resolution.toArray()}) * pos.xy) / vec2(${resolution.toArray()});
+            pos.xyz *= pos.w;
+            gl_Position = pos;
+            `
+        );
+    }
 
   handlePlayerCount(playerId, event) {
     if (event.key === "a") {
