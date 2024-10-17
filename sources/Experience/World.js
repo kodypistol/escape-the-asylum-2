@@ -34,11 +34,6 @@ export default class World {
           // PS1 Vertex Snapping
           vec4 pos = projectionMatrix * mvPosition;
 
-          // Calculate affine texture mapping (WIP)
-          float dist = length(mvPosition);
-          float affine = dist + (mvPosition.w * 8.0) / dist * 0.5;
-          vAffine = affine;
-
           // Apply vertex snapping
           pos.xyz /= pos.w;
           pos.xy = floor(vec2(${resolution.toArray()}) * pos.xy) / vec2(${resolution.toArray()});
@@ -46,31 +41,12 @@ export default class World {
           gl_Position = pos;
           `
         );
-
-        // Modify the default fragment shader for affine texture mapping
-        THREE.ShaderChunk.uv_pars_vertex =
-            `
-          varying vec2 vUv;
-          varying float vAffine;
-      ` + THREE.ShaderChunk.uv_pars_vertex;
-
-        THREE.ShaderChunk.uv_pars_fragment =
-            `
-          varying vec2 vUv;
-          varying float vAffine;
-      ` + THREE.ShaderChunk.uv_pars_fragment;
-
-        THREE.ShaderChunk.map_fragment = THREE.ShaderChunk.map_fragment.replace(
-            'vec4 texelColor = texture2D( map, vUv );',
-            `
-          vec2 uv = vUv / vAffine;
-          vec4 texelColor = texture2D( map, uv );
-          `
-        );
     }
 
     handlePlayerCount(playerId, event) {
-        if (event.key === 'a' || event.key === 'x') {
+        const key = event.key;
+
+        if (key === 'a' || key === 'x') {
             const playerIndex = playerId - 1;
             const players = this.players;
 
@@ -78,6 +54,12 @@ export default class World {
             this.experience.countElements[playerIndex].textContent = players[playerIndex].count;
 
             this.playerModels[playerIndex].position.z += 0.2;
+        }
+
+        if (!this.playersInRange) return;
+
+        if (key === 's') {
+            console.log(`Player${playerId} pressed special button`);
         }
     }
 
@@ -104,6 +86,18 @@ export default class World {
     }
 
     detectPlayerRange() {
+        // Calculate the distance between p1 and p2
+        const distance = this.p1.position.distanceTo(this.p2.position);
+        const threshold = 1; // Set your threshold distance here
+
+        if (distance < threshold) {
+            this.playersInRange = true;
+        } else {
+            this.playersInRange = false;
+        }
+    }
+
+    spawnGroundTile() {
         const playerZ = this.p1.position.z;
 
         // Check if player has passed the middle of the second tile
@@ -126,14 +120,6 @@ export default class World {
             newTile.position.set(0, 0, newTilePositionZ);
             this.scene.add(newTile);
             this.groundTiles.push(newTile);
-        }
-
-        // Calculate the distance between p1 and p2
-        const distance = this.p1.position.distanceTo(this.p2.position);
-        const threshold = 1; // Set your threshold distance here
-
-        if (distance < threshold) {
-            console.log('Players are within threshold distance!');
         }
     }
 
@@ -237,6 +223,7 @@ export default class World {
         if (this.p1 && this.p2) {
             this.detectPlayer2OutOfFOV();
             this.detectPlayerRange();
+            this.spawnGroundTile();
 
             this.p1.position.z += delta * this.offsetFactorPosition * 0.2;
             this.p2.position.z += delta * this.offsetFactorPosition * 0.2;
