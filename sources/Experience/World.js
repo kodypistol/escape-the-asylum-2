@@ -109,15 +109,14 @@ export default class World {
             // Create a new tile ahead
             const lastTile = this.groundTiles[this.groundTiles.length - 1];
             const newTilePositionZ = lastTile.position.z + this.tileLength;
-            const newTile = new THREE.Mesh(
-                new THREE.PlaneGeometry(this.tileLength, 4, 10, 5),
-                new THREE.MeshBasicMaterial({
-                    color: 'red',
-                    wireframe: true,
-                })
-            );
-            newTile.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.5);
+
+            // Clone the ground model for the new tile
+            const newTile = this.groundModel.scene.clone(true);
+
+            // Position the new tile
             newTile.position.set(0, 0, newTilePositionZ);
+
+            // Add the new tile to the scene and array
             this.scene.add(newTile);
             this.groundTiles.push(newTile);
         }
@@ -153,20 +152,17 @@ export default class World {
 
         this.playerModels = [this.p1, this.p2];
 
+        this.corridorMesh = this.resources.items.corridorMesh;
+
+        this.groundModel = this.corridorMesh;
+
         this.groundTiles = [];
 
         this.tileLength = 20;
-        const tileWidth = 4;
 
-        for (let i = 0; i < 3; i++) {
-            const floor = new THREE.Mesh(
-                new THREE.PlaneGeometry(this.tileLength, tileWidth, 10, 5),
-                new THREE.MeshBasicMaterial({
-                    color: 'red',
-                    wireframe: true,
-                })
-            );
-            floor.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.5);
+        for (let i = 0; i < 5; i++) {
+            const floor = this.groundModel.scene.clone(true);
+
             // Position the floor tiles along z
             floor.position.set(0, 0, i * this.tileLength - this.tileLength);
             this.scene.add(floor);
