@@ -44,7 +44,7 @@ export default class World
     }
 
   handlePlayerCount(playerId, event) {
-    if (event.key === "a") {
+    if (event.key === "a" || event.key === "x") {
       const playerIndex = playerId - 1
       const players = this.players
 
