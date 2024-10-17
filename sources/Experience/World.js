@@ -81,6 +81,28 @@ export default class World
     }
   }
 
+  detectPlayer2OutOfFOV() {
+    // Check if player 2 is out of camera FOV
+    const frustum = new THREE.Frustum();
+    const camera = this.experience.camera.instance;
+    const projectionMatrix = camera.projectionMatrix.clone();
+    const viewMatrix = camera.matrixWorldInverse.clone();
+    
+    frustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(projectionMatrix, viewMatrix));
+
+    // Check the position of Player 2's head
+    const headOffset = 3; // Adjust this based on your model
+    const headPosition = new THREE.Vector3(this.p2.position.x, this.p2.position.y + headOffset, this.p2.position.z);
+    
+    if (!frustum.containsPoint(headPosition) && !this.player2OutOfFOV) {
+      this.player2OutOfFOV = true; // Set flag to true
+      console.log("Player 1 wins! Player 2 is out of view.");
+      // You may want to add additional logic here, like resetting the game or ending it.
+    } else if (frustum.containsPoint(headPosition) && this.player2OutOfFOV) {
+        this.player2OutOfFOV = false; // Reset the flag if Player 2 comes back into view
+    }
+  }
+
   setDummy() {
     this.light = new THREE.AmbientLight("#FFFFFF", 1.0)
     this.scene.add(this.light)
@@ -174,6 +196,8 @@ export default class World
       this.p1.position.z += delta * this.offsetFactorPosition * 0.2
       this.p2.position.z += delta * this.offsetFactorPosition * 0.2
       this.experience.camera.instance.position.z = this.p1.position.z - 5
+
+      this.detectPlayer2OutOfFOV()
     }
 
 
