@@ -35,9 +35,13 @@ export default class World
           `
           // PS1 Vertex Snapping
           vec4 pos = projectionMatrix * mvPosition;
+
+          // Calculate affine texture mapping (WIP)
           float dist = length(mvPosition);
           float affine = dist + (mvPosition.w * 8.0) / dist * 0.5;
           vAffine = affine;
+
+          // Apply vertex snapping
           pos.xyz /= pos.w;
           pos.xy = floor(vec2(${resolution.toArray()}) * pos.xy) / vec2(${resolution.toArray()});
           pos.xyz *= pos.w;
