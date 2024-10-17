@@ -1,6 +1,6 @@
-import * as THREE from "three";
 import Experience from "./Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { PerspectiveCamera } from 'three';
 
 export default class Camera {
   constructor(_options) {
@@ -22,7 +22,7 @@ export default class Camera {
 
   setInstance() {
     // Set up
-    this.instance = new THREE.PerspectiveCamera(
+    this.instance = new PerspectiveCamera(
       75,
       this.config.width / this.config.height,
       0.1,
@@ -40,8 +40,8 @@ export default class Camera {
     this.modes.default = {};
     this.modes.default.instance = this.instance.clone();
     this.modes.default.instance.rotation.reorder("YXZ");
-    this.modes.default.instance.position.set(0, 3, -5);
-    this.modes.default.instance.lookAt(0, 0, 0);
+    this.modes.default.instance.position.set(0, 5, -10);
+    this.modes.default.instance.lookAt(0, -2, 0);
 
     // Debug
     this.modes.debug = {};
@@ -60,8 +60,8 @@ export default class Camera {
     this.modes.debug.orbitControls.enableDamping = true;
     this.modes.debug.orbitControls.update();
 
-    this.instance.position.copy(this.modes[this.mode].instance.position);
-    this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
+    // this.instance.position.copy(this.modes[this.mode].instance.position);
+    // this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
   }
 
   resize() {
@@ -77,11 +77,11 @@ export default class Camera {
 
   update() {
     // Update debug orbit controls
-    // this.modes.debug.orbitControls.update();
+    this.modes.debug.orbitControls.update();
 
     // Apply coordinates
-    // this.instance.position.copy(this.modes[this.mode].instance.position);
-    // this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
+    this.instance.position.copy(this.modes[this.mode].instance.position);
+    this.instance.quaternion.copy(this.modes[this.mode].instance.quaternion);
     this.instance.updateMatrixWorld(); // To be used in projection
   }
 

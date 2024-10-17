@@ -1,11 +1,10 @@
-import * as THREE from 'three';
-
 import Experience from './Experience.js';
 
 import ShaderManager from './managers/ShaderManager.js';
 import PlayerManager from './managers/PlayerManager.js';
 import GroundManager from './managers/GroundManager.js';
 import GameLogic from './managers/GameLogic.js';
+import { AmbientLight } from 'three';
 
 export default class World {
     constructor(_options) {
@@ -26,7 +25,7 @@ export default class World {
     }
 
     initWorld() {
-        this.scene.add(new THREE.AmbientLight('#FFFFFF', 1.0));
+        this.scene.add(new AmbientLight('#FFFFFF', 1.0));
 
         // Instantiate PlayerManager here
         this.playerManager = new PlayerManager();
@@ -34,6 +33,8 @@ export default class World {
 
         // Initialize GameLogic after PlayerManager is ready
         this.gameLogic = new GameLogic(this.playerManager.players, this.groundManager);
+
+        this.scene.add(this.resources.items['playerRig'].scene)
 
         this.groundManager.initializeGround();
     }

@@ -1,12 +1,15 @@
-import * as THREE from 'three';
 import Experience from './Experience.js';
+
+import AnimationManager from './managers/AnimationManager.js';
+
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 export default class Player {
     constructor(_options) {
         this.id = _options.id;
         this.keys = _options.keys;
-        this.color = _options.color;
         this.position = _options.position;
+        this.defaultAnimation = _options.defaultAnimation;
 
         this.experience = new Experience();
         this.resources = this.experience.resources;
@@ -20,7 +23,7 @@ export default class Player {
     }
 
     loadModel() {
-        const modelKey = this.id === 1 ? 'player1Model' : 'player2Model';
+        const modelKey = 'playerRig';
         const resourceModel = this.resources.items[modelKey];
 
         if (!resourceModel) {
@@ -28,31 +31,22 @@ export default class Player {
             return;
         }
 
-        this.model = resourceModel
+        // Use SkeletonUtils.clone() to properly clone the model
+        this.model = SkeletonUtils.clone(resourceModel.scene)
 
-        this.model.scale.set(0.01, 0.01, 0.01);
+        // Apply transformations
         this.model.position.copy(this.position);
 
-        if (this.color !== 'red') {
-            this.model.children.forEach((child) => {
-                child.traverse((m) => {
-                    if (m.isMesh) {
-                        m.material.color = new THREE.Color(this.color);
-                    }
-                });
-            });
-        }
+        // Initialize the AnimationManager
+        this.animations = resourceModel.animations;
+        this.animationManager = new AnimationManager(this.model, this.animations);
 
-        this.mixer = new THREE.AnimationMixer(this.model);
-        const idleAction = this.mixer.clipAction(this.model.animations[0]);
-        idleAction.play();
+        // Play the default animation
+        this.animationManager.playAnimation(this.defaultAnimation);
     }
 
     setupInput() {
         // Access joysticks from AxisManager
-        const joystick = this.axis[`joystick${this.id}`];
-
-        // Register buttons correctly
         const buttons = this.keys.map((key) => {
             return this.axis.registerKeys(key[0], key[1], this.id);
         });
@@ -60,7 +54,6 @@ export default class Player {
         // Create player with correct parameters
         this.instance = this.axis.createPlayer({
             id: this.id,
-            joysticks: joystick,
             buttons: buttons,
         });
 
@@ -75,22 +68,24 @@ export default class Player {
     }
 
     handleInput(event) {
-        switch(event.key) {
+        switch (event.key) {
             case 'a':
-                console.log('inside comm');
                 this.count++;
                 this.model.position.z += 0.2;
-                this.experience.countElements[this.id - 1].textContent = this.count
-            break;
+                this.experience.countElements[this.id - 1].textContent = this.count;
+                break;
             default:
                 break;
         }
     }
 
     update(delta) {
-        if (this.mixer) {
-            this.mixer.update(delta / 2000);
+        // Update the animation manager
+        if (this.animationManager) {
+            this.animationManager.update(delta / 2000); // Convert milliseconds to seconds
         }
+
+        // Other update code...
         this.model.position.z += delta * 0.01 * 0.2;
     }
 }

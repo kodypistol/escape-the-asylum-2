@@ -1,6 +1,8 @@
+import { Vector3 } from 'three';
+
 import Player from '../Player.js';
 import Experience from '../Experience.js';
-import { Vector3 } from 'three';
+
 
 export default class PlayerManager {
     constructor() {
@@ -19,8 +21,8 @@ export default class PlayerManager {
                     ['z', 'i'],
                     ['s', 's'],
                 ],
-                color: 'red',
                 position: new Vector3(0, 0, 0),
+                defaultAnimation: 'run',
             })
         );
 
@@ -33,8 +35,8 @@ export default class PlayerManager {
                     ['ArrowUp', 'i'],
                     ['ArrowDown', 's'],
                 ],
-                color: 'blue',
                 position: new Vector3(0, 0, -3),
+                defaultAnimation: 'fast_run',
             })
         );
     }

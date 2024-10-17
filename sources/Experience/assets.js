@@ -10,6 +10,7 @@ export default [
       { name: "pigeonTexture", source: "/assets/pigeon.jpg", type: "texture" },
       { name: "pigeonModel", source: "/assets/pigeon.glb", type: "glb" },
       { name: "tvModel", source: "/assets/tv.glb", type: "glb" },
+      { name: "playerRig", source: "/assets/exports/player_rig.glb", type: "glb" },
     ],
   },
 ];
