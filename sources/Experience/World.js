@@ -12,6 +12,7 @@ export default class World
         this.config = this.experience.config
         this.scene = this.experience.scene
         this.resources = this.experience.resources
+        this.offsetFactorPosition = 0.01
 
         this.vertexSnapping();
 
