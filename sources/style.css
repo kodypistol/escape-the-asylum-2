@@ -21,3 +21,14 @@ canvas {
     width: 100vw;
     height: 100vh;
 }
+
+.count {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    z-index: 1;
+}
