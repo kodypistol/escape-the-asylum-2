@@ -87,7 +87,6 @@ export default class Player {
     }
 
     handleInput(event) {
-        console.log('eve', event.key);
         switch (event.key) {
             case 'a':
                 this.count++;
