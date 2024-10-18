@@ -20,6 +20,7 @@ export default class Player {
         this.count = 0;
         this.currentColumn = 1; // 0: gauche, 1: centre, 2: droite
         this.columnWidth = 1.5; // Largeur de chaque colonne
+        this.players = this.experience.world.playerManager.players;
 
         this.loadModel();
         this.setupInput();
@@ -89,6 +90,11 @@ export default class Player {
     }
 
     handleInput(event) {
+        this.player1 = this.players[0];
+        this.player2 = this.players[1];
+        const distance = this.player1.model.position.distanceTo(this.player2.model.position);
+        const threshold = 1;
+
         switch (event.key) {
             case 'a':
                 this.count++;
@@ -105,7 +111,11 @@ export default class Player {
                 break;
 
             case 's':
-                this.animationManager.playAnimation('dodge_right', false)
+                if (this.id === 1 && distance < threshold) {
+                    this.animationManager.playAnimation('dodge_right', false)
+                } else if (this.id === 2 && distance < threshold) {
+                    this.animationManager.playAnimation('grab', false)
+                }
                 break;
 
             case 'w':
