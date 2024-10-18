@@ -26,6 +26,7 @@ export default class AnimationManager {
             return;
         }
 
+
         if (this.activeAction !== action) {
             this.previousAction = this.activeAction;
             this.activeAction = action;

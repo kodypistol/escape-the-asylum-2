@@ -3,6 +3,7 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
+import { LoopOnce } from 'three';
 
 
 export default class Player {
@@ -95,6 +96,18 @@ export default class Player {
                 break;
 
             case 'x':
+                this.animationManager.playAnimation('run_jump')
+                break;
+
+            case 'i':
+                this.animationManager.playAnimation('run_slide')
+                break;
+
+            case 's':
+                this.animationManager.playAnimation('dodge_right')
+                break;
+
+            case 'w':
                 if (!this.experience.world.gameLogic.isPlayersInThreshold) {
                     return
                 }
