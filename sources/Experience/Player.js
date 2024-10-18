@@ -103,27 +103,14 @@ export default class Player {
     handleInput(event) {
         switch (event.key) {
             case 'a':
-                this.count++;
-                this.experience.countElements[this.id - 1].textContent = this.count;
-
-                this.targetSpeed = Math.min(this.targetSpeed + this.acceleration, this.maxSpeed);
-                this.timeSinceLastPress = 0;
-                break;
-
             case 'x':
+            case 'i':
+            case 's':
                 this.count++;
                 this.experience.countElements[this.id - 1].textContent = this.count;
 
                 this.targetSpeed = Math.min(this.targetSpeed + this.acceleration, this.maxSpeed);
                 this.timeSinceLastPress = 0;
-                break;
-
-            case 'i':
-                // this.animationManager.playAnimation('run_slide', false)
-                break;
-
-            case 's':
-
                 break;
 
             case 'w':
