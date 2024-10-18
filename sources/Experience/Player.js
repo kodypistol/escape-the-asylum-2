@@ -3,7 +3,6 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
-import { LoopOnce } from 'three';
 
 
 export default class Player {
@@ -33,7 +32,6 @@ export default class Player {
             return;
         }
 
-        // Use SkeletonUtils.clone() to properly clone the model
         this.model = SkeletonUtils.clone(resourceModel.scene)
 
         // Apply transformations
