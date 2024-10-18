@@ -65,6 +65,23 @@ export default class Player {
 
         // Add event listener for keydown events
         this.instance.addEventListener('keydown', (e) => this.handleInput(e));
+        this.axis[`joystick${this.id}`].addEventListener("joystick:quickmove",(e) => this.handleJoystickQuickmoveHandler(e));
+
+    }
+
+    handleJoystickQuickmoveHandler(event) {
+        if (event.direction === "left") {
+            console.log('left');
+        }
+        if (event.direction === "right") {
+            console.log('right');
+        }
+        if (event.direction === "up") {
+            console.log('up');
+        }
+        if (event.direction === "down") {
+            console.log('down');
+        }
     }
 
     handleInput(event) {
