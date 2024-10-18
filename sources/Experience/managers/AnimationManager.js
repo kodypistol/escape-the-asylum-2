@@ -1,12 +1,13 @@
-import { AnimationMixer } from 'three';
+import { AnimationMixer, LoopOnce, LoopRepeat } from 'three';
 
 export default class AnimationManager {
-    constructor(model, animations) {
+    constructor(model, animations, player) {
         this.model = model;
         this.mixer = new AnimationMixer(this.model);
         this.actions = {};
         this.activeAction = null;
         this.previousAction = null;
+        this.player = player;
 
         this.loadAnimations(animations);
     }
@@ -19,7 +20,7 @@ export default class AnimationManager {
         });
     }
 
-    playAnimation(name) {
+    playAnimation(name, isLooping = true) {
         const action = this.actions[name];
         if (!action) {
             console.warn(`Animation ${name} not found`);
@@ -35,7 +36,22 @@ export default class AnimationManager {
             if (this.previousAction) {
                 this.previousAction.fadeOut(0.5);
             }
-            this.activeAction.reset().fadeIn(0).play();
+            
+           if (!isLooping) {// Set the loop mode to only play the animation once
+                this.activeAction.setLoop(LoopOnce);
+                this.activeAction.reset().fadeIn(0.5).play();
+
+                // Event listener for when the animation finishes playing
+                this.activeAction.clampWhenFinished = true; // Keeps the model in the final pose
+                this.mixer.addEventListener('finished', () => {
+                    // this.activeAction.stop(); // Stop the action once finished
+                    this.playAnimation(this.player.defaultAnimation); // Play the default animation                    
+                });
+            } else {
+                // Play the animation with looping enabled
+                this.activeAction.setLoop(LoopRepeat);
+                this.activeAction.reset().fadeIn(0).play();
+            }
         }
     }
 

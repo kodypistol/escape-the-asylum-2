@@ -41,7 +41,7 @@ export default class Player {
 
         // Initialize the AnimationManager
         this.animations = resourceModel.animations;
-        this.animationManager = new AnimationManager(this.model, this.animations);
+        this.animationManager = new AnimationManager(this.model, this.animations, this);
 
         // Play the default animation
         this.animationManager.playAnimation(this.defaultAnimation);
@@ -97,15 +97,15 @@ export default class Player {
                 break;
 
             case 'x':
-                this.animationManager.playAnimation('run_jump')
+                this.animationManager.playAnimation('run_jump', false)
                 break;
 
             case 'i':
-                this.animationManager.playAnimation('run_slide')
+                this.animationManager.playAnimation('run_slide', false)
                 break;
 
             case 's':
-                this.animationManager.playAnimation('dodge_right')
+                this.animationManager.playAnimation('dodge_right', false)
                 break;
 
             case 'w':
