@@ -21,6 +21,14 @@ export default class Player {
         this.currentColumn = 1; // 0: gauche, 1: centre, 2: droite
         this.columnWidth = 1.5; // Largeur de chaque colonne
         this.players = this.experience.world.playerManager.players;
+        this.speed = 0; // Current speed
+        this.targetSpeed = 0; // Speed we're interpolating to
+        this.maxSpeed = 8; // Maximum speed
+        this.minSpeed = 4; // Minimum speed
+        this.acceleration = 0.3; // Increase per button press
+        this.deceleration = 1; // Decrease per second when not pressing
+        this.timeSinceLastPress = 0;
+        this.buttonPressInterval = 0.2; // Seconds
 
         this.loadModel();
         this.setupInput();
@@ -98,8 +106,10 @@ export default class Player {
         switch (event.key) {
             case 'a':
                 this.count++;
-                this.model.position.z += 0.2;
                 this.experience.countElements[this.id - 1].textContent = this.count;
+
+                this.targetSpeed = Math.min(this.targetSpeed + this.acceleration, this.maxSpeed);
+                this.timeSinceLastPress = 0; //
                 break;
 
             case 'x':
@@ -148,12 +158,45 @@ export default class Player {
         this.model.position.x = (this.currentColumn - 1) * this.columnWidth;
     }
 
+    get currentSpeed() {
+        return this.speed;
+    }
+
     update(delta) {
-        // Update the animation manager
-        if (this.animationManager) {
-            this.animationManager.update(delta / 2000); // Convert milliseconds to seconds
+        const deltaSeconds = delta / 1000;
+
+        // Increase time since last button press
+        this.timeSinceLastPress += deltaSeconds;
+
+        // Decrease target speed if no recent button press
+        if (this.timeSinceLastPress > this.buttonPressInterval) {
+            this.targetSpeed = Math.max(this.targetSpeed - this.deceleration * deltaSeconds, this.minSpeed);
         }
 
-        this.model.position.z += delta * 0.01 * 0.2;
+
+
+        // Smoothly interpolate current speed towards target speed
+        const speedChangeRate = 5; // Adjust for desired responsiveness
+        this.speed += (this.targetSpeed - this.speed) * speedChangeRate * deltaSeconds;
+
+        // Update animation manager
+        if (this.animationManager) {
+            // Optionally adjust animation speed
+            this.animationManager.mixer.timeScale = 0.5 + (this.speed / this.maxSpeed) * 0.5;
+            this.animationManager.update(deltaSeconds);
+        }
+
+        const player1 = this.players[0];
+        const player2 = this.players[1];
+
+        if (this.id === 2 && this.experience.world.gameLogic.isPlayersInThreshold) {
+            const player1Speed = player1 ? player1.currentSpeed : 0;
+
+            // Limit targetSpeed to not exceed Player 1's speed
+            this.targetSpeed = Math.min(this.targetSpeed, player1Speed);
+        }
+        // Update position based on current speed
+        this.model.position.z += this.speed * deltaSeconds;
+
     }
 }

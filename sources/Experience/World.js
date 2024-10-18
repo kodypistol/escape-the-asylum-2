@@ -36,8 +36,6 @@ export default class World {
         // Initialize GameLogic after PlayerManager is ready
         this.gameLogic = new GameLogic(this.playerManager.players, this.groundManager);
 
-        this.scene.add(this.resources.items['playerRig'].scene)
-
         this.groundManager.initializeGround();
     }
 
