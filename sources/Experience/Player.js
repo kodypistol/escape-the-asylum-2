@@ -107,15 +107,19 @@ export default class Player {
                 this.experience.countElements[this.id - 1].textContent = this.count;
 
                 this.targetSpeed = Math.min(this.targetSpeed + this.acceleration, this.maxSpeed);
-                this.timeSinceLastPress = 0; //
+                this.timeSinceLastPress = 0;
                 break;
 
             case 'x':
-                this.jump();
+                this.count++;
+                this.experience.countElements[this.id - 1].textContent = this.count;
+
+                this.targetSpeed = Math.min(this.targetSpeed + this.acceleration, this.maxSpeed);
+                this.timeSinceLastPress = 0;
                 break;
 
             case 'i':
-                this.animationManager.playAnimation('run_slide', false)
+                // this.animationManager.playAnimation('run_slide', false)
                 break;
 
             case 's':
