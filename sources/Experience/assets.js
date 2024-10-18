@@ -12,6 +12,7 @@ export default [
             { name: 'tvModel', source: '/assets/tv.glb', type: 'glb' },
             { name: 'corridorMesh', source: '/assets/corridor-mesh.glb', type: 'glb' },
             { name: 'corridorTexture', source: '/assets/corridor-albedo.jpg', type: 'texture' },
+            { name: "playerRig", source: "/assets/exports/player_rig.glb", type: "glb" },
         ],
     },
 ];
