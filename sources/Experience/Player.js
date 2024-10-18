@@ -1,8 +1,9 @@
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+
 import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
 
-import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 export default class Player {
     constructor(_options) {
@@ -85,11 +86,20 @@ export default class Player {
     }
 
     handleInput(event) {
+        console.log('eve', event.key);
         switch (event.key) {
             case 'a':
                 this.count++;
                 this.model.position.z += 0.2;
                 this.experience.countElements[this.id - 1].textContent = this.count;
+                break;
+
+            case 'x':
+                if (!this.experience.world.gameLogic.isPlayersInThreshold) {
+                    return
+                }
+
+                console.log(`Player ${this.id} won!`);
                 break;
             default:
                 break;
@@ -102,7 +112,6 @@ export default class Player {
             this.animationManager.update(delta / 2000); // Convert milliseconds to seconds
         }
 
-        // Other update code...
         this.model.position.z += delta * 0.01 * 0.2;
     }
 }

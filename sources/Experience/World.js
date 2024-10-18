@@ -1,10 +1,12 @@
+import { AmbientLight } from 'three';
+
 import Experience from './Experience.js';
 
 import ShaderManager from './managers/ShaderManager.js';
 import PlayerManager from './managers/PlayerManager.js';
 import GroundManager from './managers/GroundManager.js';
 import GameLogic from './managers/GameLogic.js';
-import { AmbientLight } from 'three';
+
 
 export default class World {
     constructor(_options) {
@@ -14,11 +16,11 @@ export default class World {
         this.resources = this.experience.resources;
 
         this.shaderManager = new ShaderManager();
-        this.groundManager = new GroundManager();
 
         // Move PlayerManager initialization inside the resource load callback
         this.resources.on('groupEnd', (_group) => {
             if (_group.name === 'base') {
+                this.groundManager = new GroundManager();
                 this.initWorld();
             }
         });

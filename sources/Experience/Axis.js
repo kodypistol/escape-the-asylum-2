@@ -1,4 +1,5 @@
 import Axis from 'axis-api';
+
 import Experience from './Experience.js';
 
 export default class AxisManager {

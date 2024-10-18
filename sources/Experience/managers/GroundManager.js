@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import Experience from '../Experience.js';
 
 export default class GroundManager {
@@ -7,11 +6,11 @@ export default class GroundManager {
         this.scene = this.experience.scene;
         this.groundTiles = [];
         this.tileLength = 20;
-        this.tileWidth = 4;
+        this.model = this.experience.resources.items['corridorMesh']
     }
 
     initializeGround() {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             const floor = this.createTile(i * this.tileLength - this.tileLength);
             this.scene.add(floor);
             this.groundTiles.push(floor);
@@ -19,14 +18,8 @@ export default class GroundManager {
     }
 
     createTile(positionZ) {
-        const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(this.tileLength, this.tileWidth, 10, 5),
-            new THREE.MeshBasicMaterial({
-                color: 'red',
-                wireframe: true,
-            })
-        );
-        floor.rotation.set(Math.PI * -0.5, 0, Math.PI * 0.5);
+        const floor = this.model.scene.clone();
+
         floor.position.set(0, 0, positionZ);
         return floor;
     }

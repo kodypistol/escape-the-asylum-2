@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+import { Frustum, Matrix4, Vector3 } from 'three';
+
 import Experience from '../Experience.js';
 
 export default class GameLogic {
@@ -7,6 +8,7 @@ export default class GameLogic {
         this.groundManager = groundManager;
         this.experience = new Experience();
         this.player2OutOfFOV = false;
+        this.isPlayersInThreshold = false
     }
 
     update() {
@@ -15,18 +17,18 @@ export default class GameLogic {
     }
 
     detectPlayer2OutOfFOV() {
-        const frustum = new THREE.Frustum();
+        const frustum = new Frustum();
         const camera = this.experience.camera.instance;
         const projectionMatrix = camera.projectionMatrix.clone();
         const viewMatrix = camera.matrixWorldInverse.clone();
 
         frustum.setFromProjectionMatrix(
-            new THREE.Matrix4().multiplyMatrices(projectionMatrix, viewMatrix)
+            new Matrix4().multiplyMatrices(projectionMatrix, viewMatrix)
         );
 
         const player2 = this.players[1];
         const headOffset = 3;
-        const headPosition = new THREE.Vector3(
+        const headPosition = new Vector3(
             player2.model.position.x,
             player2.model.position.y + headOffset,
             player2.model.position.z
@@ -49,6 +51,7 @@ export default class GameLogic {
         const threshold = 1;
 
         if (distance < threshold) {
+            this.isPlayersInThreshold = true
             console.log('Players are within threshold distance!');
         }
     }
