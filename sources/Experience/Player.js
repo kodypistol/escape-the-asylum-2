@@ -18,6 +18,8 @@ export default class Player {
         this.axis = this.axisManager.instance;
 
         this.count = 0;
+        this.currentColumn = 1; // 0: gauche, 1: centre, 2: droite
+        this.columnWidth = 1.5; // Largeur de chaque colonne
 
         this.loadModel();
         this.setupInput();
@@ -72,9 +74,11 @@ export default class Player {
     handleJoystickQuickmoveHandler(event) {
         if (event.direction === "left") {
             console.log('left');
+            this.moveLeft();
         }
         if (event.direction === "right") {
             console.log('right');
+            this.moveRight();
         }
         if (event.direction === "up") {
             console.log('up');
@@ -94,10 +98,12 @@ export default class Player {
 
             case 'x':
                 this.animationManager.playAnimation('run_jump')
+                this.moveLeft();
                 break;
 
             case 'i':
                 this.animationManager.playAnimation('run_slide')
+                this.moveRight();
                 break;
 
             case 's':
@@ -111,9 +117,36 @@ export default class Player {
 
                 console.log(`Player ${this.id} won!`);
                 break;
+
+            case 'ArrowLeft':
+                this.moveLeft();
+                break;
+
+            case 'ArrowRight':
+                this.moveRight();
+                break;
+                
             default:
                 break;
         }
+    }
+
+    moveLeft() {
+        if (this.currentColumn > 0) {
+            this.currentColumn--;
+            this.updatePosition();
+        }
+    }
+
+    moveRight() {
+        if (this.currentColumn < 2) {
+            this.currentColumn++;
+            this.updatePosition();
+        }
+    }
+
+    updatePosition() {
+        this.model.position.x = (this.currentColumn - 1) * this.columnWidth;
     }
 
     update(delta) {
