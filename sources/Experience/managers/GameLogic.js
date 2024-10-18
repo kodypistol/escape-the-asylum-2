@@ -50,7 +50,7 @@ export default class GameLogic {
         const distance = player1.model.position.distanceTo(player2.model.position);
         const threshold = 1;
 
-        if (distance < threshold) {
+        if (distance < threshold && player1.model.position.x === player2.model.position.x) {
             this.isPlayersInThreshold = true
             console.log('Players are within threshold distance!');
         }
