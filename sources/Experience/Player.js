@@ -24,9 +24,9 @@ export default class Player {
         this.players = this.experience.world.playerManager.players;
         this.speed = 0; // Current speed
         this.targetSpeed = 0; // Speed we're interpolating to
-        this.maxSpeed = 8; // Maximum speed
+        this.maxSpeed = 6; // Maximum speed
         this.minSpeed = 4; // Minimum speed
-        this.acceleration = 0.3; // Increase per button press
+        this.acceleration = 0.15; // Increase per button press
         this.deceleration = 1; // Decrease per second when not pressing
         this.timeSinceLastPress = 0;
         this.buttonPressInterval = 0.2; // Seconds
