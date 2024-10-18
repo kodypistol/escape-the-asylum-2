@@ -74,11 +74,11 @@ export default class Player {
     handleJoystickQuickmoveHandler(event) {
         if (event.direction === "left") {
             console.log('left');
-            this.moveLeft();
+            this.moveRight();
         }
         if (event.direction === "right") {
             console.log('right');
-            this.moveRight();
+            this.moveLeft();
         }
         if (event.direction === "up") {
             console.log('up');
@@ -98,12 +98,10 @@ export default class Player {
 
             case 'x':
                 this.animationManager.playAnimation('run_jump')
-                this.moveLeft();
                 break;
 
             case 'i':
                 this.animationManager.playAnimation('run_slide')
-                this.moveRight();
                 break;
 
             case 's':
@@ -117,15 +115,6 @@ export default class Player {
 
                 console.log(`Player ${this.id} won!`);
                 break;
-
-            case 'ArrowLeft':
-                this.moveLeft();
-                break;
-
-            case 'ArrowRight':
-                this.moveRight();
-                break;
-                
             default:
                 break;
         }
