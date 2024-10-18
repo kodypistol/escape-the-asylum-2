@@ -3,6 +3,7 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
+import gsap from 'gsap';
 
 
 export default class Player {
@@ -91,18 +92,15 @@ export default class Player {
         }
         if (event.direction === "up") {
             console.log('up');
+            this.jump();
         }
         if (event.direction === "down") {
             console.log('down');
+            this.animationManager.playAnimation('run_slide', false)
         }
     }
 
     handleInput(event) {
-        this.player1 = this.players[0];
-        this.player2 = this.players[1];
-        const distance = this.player1.model.position.distanceTo(this.player2.model.position);
-        const threshold = 1;
-
         switch (event.key) {
             case 'a':
                 this.count++;
@@ -113,7 +111,7 @@ export default class Player {
                 break;
 
             case 'x':
-                this.animationManager.playAnimation('run_jump', false)
+                this.jump();
                 break;
 
             case 'i':
@@ -121,16 +119,18 @@ export default class Player {
                 break;
 
             case 's':
-                if (this.id === 1 && distance < threshold) {
-                    this.animationManager.playAnimation('dodge_right', false)
-                } else if (this.id === 2 && distance < threshold) {
-                    this.animationManager.playAnimation('grab', false)
-                }
+
                 break;
 
             case 'w':
                 if (!this.experience.world.gameLogic.isPlayersInThreshold) {
                     return
+                }
+
+                if (this.id === 1) {
+                    this.animationManager.playAnimation('dodge_right', false)
+                } else if (this.id === 2) {
+                    this.animationManager.playAnimation('grab', false)
                 }
 
                 console.log(`Player ${this.id} won!`);
@@ -152,6 +152,40 @@ export default class Player {
             this.currentColumn++;
             this.updatePosition();
         }
+    }
+
+    jump() {
+         // Get the jump animation from the AnimationManager
+        this.animationManager.playAnimation('run_jump', false);       
+
+        // Check if already jumping to avoid multiple jumps
+        if (this.isJumping) return;
+
+        // Set the flag that the player is jumping
+        this.isJumping = true;
+
+        // Define jump properties
+        const jumpHeight = 1; // Maximum height of the jump
+        const jumpDuration = 0.6; // Duration of the entire jump
+
+        // GSAP tween to handle jump (up and down)
+        gsap.to(this.model.position, {
+            y: jumpHeight,      // Move model up to the specified jump height
+            duration: jumpDuration / 2, // Half the time for upward motion
+            ease: "power1.out",  // Easing for smooth deceleration
+            onComplete: () => {
+                // After reaching the peak, fall back down
+                gsap.to(this.model.position, {
+                    y: 0,       // Return to the ground
+                    duration: jumpDuration / 2,  // Second half of the jump
+                    ease: "power1.inOut", // A slight bounce effect upon landing
+                    onComplete: () => {
+                        // Jump complete, allow jumping again
+                        this.isJumping = false;
+                    }
+                });
+            }
+        });
     }
 
     updatePosition() {

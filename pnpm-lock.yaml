@@ -11,6 +11,9 @@ importers:
       axis-api:
         specifier: github:gobelins-axis/axis-api
         version: https://codeload.github.com/gobelins-axis/axis-api/tar.gz/ef1f04be43959bd703db1f0d6b727cc6fc226367
+      gsap:
+        specifier: ^3.12.5
+        version: 3.12.5
       lil-gui:
         specifier: ^0.19.2
         version: 0.19.2
@@ -312,6 +315,9 @@ packages:
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
     deprecated: Glob versions prior to v9 are no longer supported
+
+  gsap@3.12.5:
+    resolution: {integrity: sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==}
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
@@ -619,6 +625,8 @@ snapshots:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
+
+  gsap@3.12.5: {}
 
   inflight@1.0.6:
     dependencies:
