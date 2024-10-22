@@ -48,7 +48,7 @@ export default class World {
 
         if (this.playerManager && this.groundManager && this.gameLogic) {
             this.playerManager.update(delta);
-            this.groundManager.update(this.playerManager.getLeadPlayerPosition());
+            this.groundManager.update(this.playerManager);
             this.gameLogic.update();
             // Update camera position based on leading player
             this.experience.camera.instance.position.z = this.playerManager.getLeadPlayerPosition().z - 5;
