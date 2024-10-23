@@ -138,7 +138,7 @@ export default class GroundManager {
                     const playerBox = new THREE.Box3().setFromCenterAndSize(playerPosition, new THREE.Vector3(1, 2, 1));
 
                     if (colliderBox.intersectsBox(playerBox)) {
-                        console.log('Collision detected with collider!');
+                        // console.log('Collision detected with collider!');
                         // Handle collisio
                     }
                 }

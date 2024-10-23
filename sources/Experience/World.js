@@ -46,6 +46,8 @@ export default class World {
     update() {
         const delta = this.experience.time.delta;
 
+        if(this.playerManager)
+
         if (this.playerManager && this.groundManager && this.gameLogic) {
             this.playerManager.update(delta);
             this.groundManager.update(this.playerManager.getLeadPlayerPosition());

@@ -9,8 +9,19 @@ export default class PlayerManager {
         this.experience = new Experience();
         this.axis = this.experience.axis.instance;
         this.players = [];
+        this.isStarted = false; //To optimize
+
     }
 
+    isGameStarted(){
+        return this.isStarted;
+    }
+
+    startGame() {
+        this.isStarted = true; // Global start
+        console.log("Game has started");
+        // You can add any logic here that you want to run when the game starts
+    }   
     setupPlayers() {
         this.players.push(
             new Player({
@@ -24,6 +35,7 @@ export default class PlayerManager {
                 ],
                 position: new Vector3(0, 0, 0),
                 defaultAnimation: 'run',
+                playerManager : this
             })
         );
 
@@ -39,6 +51,8 @@ export default class PlayerManager {
                 ],
                 position: new Vector3(0, 0, -3),
                 defaultAnimation: 'fast_run',
+                playerManager : this
+
             })
         );
     }

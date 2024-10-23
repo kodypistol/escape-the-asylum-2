@@ -3,6 +3,7 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
+import AudioManager from './managers/AudioManager.js';
 import gsap from 'gsap';
 
 
@@ -30,6 +31,14 @@ export default class Player {
         this.deceleration = 1; // Decrease per second when not pressing
         this.timeSinceLastPress = 0;
         this.buttonPressInterval = 0.2; // Seconds
+
+        this.AudioManager= new AudioManager();
+
+        this.playerManager = _options.playerManager; //To optimize
+
+        // Bind the startGame and handleInput methods to ensure correct reference
+        this.boundStartGame = this.startGame.bind(this);
+        this.boundHandleInput = this.handleInput.bind(this);
 
         this.loadModel();
         this.setupInput();
@@ -76,7 +85,12 @@ export default class Player {
         }
 
         // Add event listener for keydown events
-        this.instance.addEventListener('keydown', (e) => this.handleInput(e));
+        if (!this.playerManager.isGameStarted()) {
+            this.instance.addEventListener('keydown', this.boundStartGame);
+        } else {
+            this.instance.addEventListener('keydown', this.boundHandleInput);
+        }
+
         this.axis[`joystick${this.id}`].addEventListener("joystick:quickmove",(e) => this.handleJoystickQuickmoveHandler(e));
 
     }
@@ -100,12 +114,26 @@ export default class Player {
         }
     }
 
+    startGame(event) {
+        if (event.key === "a") {
+            // Notify the PlayerManager that the game has started
+            this.playerManager.startGame();
+
+            this.removeStartScreen()
+
+            // Play audio for game start
+            this.AudioManager.playClick();
+            this.AudioManager.playAmbient();
+        }
+    }
+
     handleInput(event) {
         switch (event.key) {
             case 'a':
             case 'x':
             case 'i':
             case 's':
+                console.log("HEY")
                 this.count++;
                 this.experience.countElements[this.id - 1].textContent = this.count;
 
@@ -187,6 +215,28 @@ export default class Player {
         return this.speed;
     }
 
+    removeStartScreen(){
+        console.log("removeStartScreen")
+        this.splashScreen = document.querySelector('.splashscreen');
+
+        const tl = gsap.timeline();
+        tl.to([".splashscreen svg, .splashscreen img"], {
+            autoAlpha: 0,
+            duration: 0.5,
+            stagger: 0.1,
+        })
+
+        tl.to(".splashscreen", {
+            autoAlpha: 0,
+            duration: 0.5,
+            onComplete: () => {
+                this.splashScreen.style.display = "none";
+                // Remove the startGame event listener and add handleInput
+                this.instance.removeEventListener('keydown', this.boundStartGame);
+                this.instance.addEventListener('keydown', this.boundHandleInput);
+            }
+        })
+    }
     update(delta) {
         const deltaSeconds = delta / 1000;
 
