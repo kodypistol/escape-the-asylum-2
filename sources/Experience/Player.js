@@ -43,6 +43,14 @@ export default class Player {
         this.isStop = false;
         this.life = 3;
 
+        this.AudioManager= new AudioManager();
+
+        this.playerManager = _options.playerManager; //To optimize
+
+        // Bind the startGame and handleInput methods to ensure correct reference
+        this.boundStartGame = this.startGame.bind(this);
+        this.boundHandleInput = this.handleInput.bind(this);
+
         this.loadModel();
         this.setupInput();
     }
