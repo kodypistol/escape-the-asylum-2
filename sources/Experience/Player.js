@@ -225,6 +225,10 @@ export default class Player {
         }, immunityDuration);
     }
 
+    eat() {
+        console.log(`Player ${this.id} ate a pizza!`);
+    }
+
     updatePosition() {
         this.model.position.x = (this.currentColumn - 1) * this.columnWidth;
     }

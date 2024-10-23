@@ -11,8 +11,8 @@ export default class GroundManager {
         // Use an array to store both models
         this.models = [
             this.experience.resources.items['corridorMesh'],
-            // this.experience.resources.items['strecherMesh'],
-            // this.experience.resources.items['chairMesh'],
+            this.experience.resources.items['strecherMesh'],
+            this.experience.resources.items['chairMesh'],
         ];
 
         // Store references to the models individually
@@ -81,10 +81,14 @@ export default class GroundManager {
         let pizza1 = this.createPizzaWithCollider(0, 0.1, -2);
         let pizza2 = this.createPizzaWithCollider(-1.5, 0.1, 8);
 
-        stretcherMeshClone.add(pizza1.mesh, pizza2.mesh);
-        stretcherMeshClone.add(pizza1.collider, pizza2.collider);
-        colliders.push(pizza1.collider, pizza2.collider);
+        let pizza1Mesh = pizza1.mesh;
+        let pizza2Mesh = pizza2.mesh;
 
+        pizza1Mesh.add(pizza1.collider);
+        pizza2Mesh.add(pizza2.collider);
+
+        stretcherMeshClone.add(pizza1Mesh, pizza2Mesh);
+        colliders.push(pizza1.collider, pizza2.collider);
 
         stretcherMeshClone.userData.colliders = colliders;
 
@@ -121,8 +125,13 @@ export default class GroundManager {
         let pizza1 = this.createPizzaWithCollider(1.5, 0.1, 1);
         let pizza2 = this.createPizzaWithCollider(-1.5, 0.1, 8);
 
-        chairMeshClone.add(pizza1.mesh, pizza2.mesh);
-        chairMeshClone.add(pizza1.collider, pizza2.collider);
+        let pizza1Mesh = pizza1.mesh;
+        let pizza2Mesh = pizza2.mesh;
+
+        pizza1Mesh.add(pizza1.collider);
+        pizza2Mesh.add(pizza2.collider);
+
+        chairMeshClone.add(pizza1Mesh, pizza2Mesh);
         colliders.push(pizza1.collider, pizza2.collider);
 
         chairMeshClone.userData.colliders = colliders;
@@ -157,9 +166,14 @@ export default class GroundManager {
         // Create pizzas with colliders
         let pizza1 = this.createPizzaWithCollider(1.5, 0.1, 1);
         let pizza2 = this.createPizzaWithCollider(-1.5, 0.1, -6);
+        
+        let pizza1Mesh = pizza1.mesh;
+        let pizza2Mesh = pizza2.mesh;
 
-        corridorMesh.add(pizza1.mesh, pizza2.mesh);
-        corridorMesh.add(pizza1.collider, pizza2.collider);
+        pizza1Mesh.add(pizza1.collider);
+        pizza2Mesh.add(pizza2.collider);
+
+        corridorMesh.add(pizza1Mesh, pizza2Mesh);
         colliders.push(pizza1.collider, pizza2.collider);
 
         corridorMesh.userData.colliders = colliders;
@@ -173,10 +187,10 @@ export default class GroundManager {
         pizza.position.set(x, y, z);
 
         const collider = new THREE.Mesh(
-            new THREE.BoxGeometry(0.5, 0.5, 0.3),
-            new THREE.MeshBasicMaterial({ visible: true, color: 0xff0000 })
+            new THREE.BoxGeometry(1.5, 1.5, 1.3),
+            new THREE.MeshBasicMaterial({ visible: false, color: 0xff0000 })
         );
-        collider.position.set(x, y, z);
+        collider.position.set(0, 0, 0);
         collider.userData.isCollider = true;
         collider.name = 'pizza';
 
@@ -216,11 +230,9 @@ export default class GroundManager {
                         if (colliderBox.intersectsBox(playerBox)) {
                             // console.log('Collision detected with collider and player ' + player.id);
                             if (collider.name === 'pizza') {
-                                // player.eat();
+                                player.eat();
                                 const pizzaMesh = collider.parent;
                                 tile.remove(pizzaMesh);
-                                console.log(pizzaMesh)
-
                             } else if (!player.isImmune) {
                                 player.collide();
                             }
