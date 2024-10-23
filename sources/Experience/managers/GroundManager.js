@@ -7,12 +7,15 @@ export default class GroundManager {
         this.scene = this.experience.scene;
         this.groundTiles = [];
         this.tileLength = 20;
+        this.nbTilesGenerated = 0;
+        this.changeBiomEach = 10;
 
         // Use an array to store both models
         this.models = [
-            this.experience.resources.items['corridorMesh'],
-            this.experience.resources.items['strecherMesh'],
-            this.experience.resources.items['chairMesh'],
+            // this.experience.resources.items['corridorMesh'],
+            // this.experience.resources.items['strecherMesh'],
+            // this.experience.resources.items['chairMesh'],
+            this.experience.resources.items['slideMesh'],
         ];
 
         // Store references to the models individually
@@ -20,6 +23,8 @@ export default class GroundManager {
         this.stretcherMesh = this.experience.resources.items['strecherMesh'];
         this.chairMesh = this.experience.resources.items['chairMesh'];
         this.pizzaMesh = this.experience.resources.items['pizzaMesh'];
+        this.slideMesh = this.experience.resources.items['slideMesh'];
+        this.slideMeshOrange = this.experience.resources.items['slideMeshOrange'];
     }
 
     initializeGround() {
@@ -37,16 +42,21 @@ export default class GroundManager {
 
         let floor;
 
-        if (selectedModel === this.stretcherMesh) {
-            // If the selected model is the stretcher mesh, prepare it with colliders
-            floor = this.prepareStretcherMesh(positionZ);
-        } else if (selectedModel === this.chairMesh) {
-            // If the selected model is the chair mesh, prepare it with colliders
-            floor = this.prepareChairMesh(positionZ);
-        } else {
-            // Else prepare the floor mesh
-            floor = this.prepareFloorMesh(positionZ);
+        switch (selectedModel) {
+            case this.stretcherMesh:
+                floor = this.prepareStretcherMesh(positionZ);
+                break;
+            case this.chairMesh:
+                floor = this.prepareChairMesh(positionZ);
+            case this.slideMesh:
+                floor = this.prepareSlideMesh(positionZ);
+                break;
+            default:
+                floor = this.prepareFloorMesh(positionZ);
+                break;
         }
+
+        this.nbTilesGenerated++;
 
         return floor;
     }
@@ -166,7 +176,7 @@ export default class GroundManager {
         // Create pizzas with colliders
         let pizza1 = this.createPizzaWithCollider(1.5, 0.1, 1);
         let pizza2 = this.createPizzaWithCollider(-1.5, 0.1, -6);
-        
+
         let pizza1Mesh = pizza1.mesh;
         let pizza2Mesh = pizza2.mesh;
 
@@ -179,6 +189,58 @@ export default class GroundManager {
         corridorMesh.userData.colliders = colliders;
 
         return corridorMesh;
+    }
+
+    prepareSlideMesh(positionZ) {
+        let slideMesh;
+        if (this.nbTilesGenerated > this.changeBiomEach) {
+            slideMesh = this.slideMeshOrange.scene.clone(true);
+        } else if (this.nbTilesGenerated > this.changeBiomEach) {
+            slideMesh = this.slideMesh.scene.clone(true);
+        } else {
+            slideMesh = this.slideMesh.scene.clone(true);
+        }
+        slideMesh.position.set(0, 0, positionZ);
+
+        // Array to store colliders
+        const colliders = [];
+
+        // Define obstacle positions and dimensions
+        const obstacles = [
+            { x: 1.5, y: 0.5, z: -7, width: 3, height: 0.5, depth: 0.3 },
+            { x: -1.5, y: 1.8, z: -1, width: 3, height: 1, depth: 0.5 },
+            { x: 1.5, y: 0.75, z: 5.5, width: 1, height: 1.5, depth: 2 },
+            { x: -1.5, y: 1, z: -10, width: 1.5, height: 2, depth: 0.2 },
+            { x: 1.5, y: 1, z: -10, width: 1.5, height: 2, depth: 0.2 },
+        ];
+
+        for (const obstacle of obstacles) {
+            const collider = new THREE.Mesh(
+                new THREE.BoxGeometry(obstacle.width, obstacle.height, obstacle.depth),
+                new THREE.MeshBasicMaterial({ visible: false, color: 0xffff00 })
+            );
+            collider.position.set(obstacle.x, obstacle.y, obstacle.z);
+            collider.userData.isCollider = true;
+            slideMesh.add(collider);
+            colliders.push(collider);
+        }
+
+        // Create pizzas with colliders
+        let pizza1 = this.createPizzaWithCollider(1.5, 0.1, 1);
+        let pizza2 = this.createPizzaWithCollider(-1.5, 0.1, -6);
+
+        let pizza1Mesh = pizza1.mesh;
+        let pizza2Mesh = pizza2.mesh;
+
+        pizza1Mesh.add(pizza1.collider);
+        pizza2Mesh.add(pizza2.collider);
+
+        slideMesh.add(pizza1Mesh, pizza2Mesh);
+        colliders.push(pizza1.collider, pizza2.collider);
+
+        slideMesh.userData.colliders = colliders;
+
+        return slideMesh;
     }
 
     createPizzaWithCollider(x, y, z) {
