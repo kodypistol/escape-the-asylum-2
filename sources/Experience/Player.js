@@ -49,6 +49,14 @@ export default class Player {
         this.boundStartGame = this.startGame.bind(this);
         this.boundHandleInput = this.handleInput.bind(this);
 
+        this.AudioManager= new AudioManager();
+
+        this.playerManager = _options.playerManager; //To optimize
+
+        // Bind the startGame and handleInput methods to ensure correct reference
+        this.boundStartGame = this.startGame.bind(this);
+        this.boundHandleInput = this.handleInput.bind(this);
+
         this.loadModel();
         this.setupInput();
     }
