@@ -30,6 +30,7 @@ export default class Player {
         this.deceleration = 1; // Decrease per second when not pressing
         this.timeSinceLastPress = 0;
         this.buttonPressInterval = 0.2; // Seconds
+        this.isImmune = false;
 
         this.loadModel();
         this.setupInput();
@@ -78,6 +79,23 @@ export default class Player {
         // Add event listener for keydown events
         this.instance.addEventListener('keydown', (e) => this.handleInput(e));
         this.axis[`joystick${this.id}`].addEventListener("joystick:quickmove",(e) => this.handleJoystickQuickmoveHandler(e));
+
+        // set key arro left to move left without joystick
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                this.moveRight();
+            }
+            if (e.key === 'ArrowRight') {
+                this.moveLeft();
+            }
+            if (e.key === 'ArrowUp') {
+                this.jump();
+            }
+            if (e.key === 'ArrowDown') {
+                this.animationManager.playAnimation('run_slide', false)
+            }
+        });
+        
 
     }
 
@@ -179,6 +197,38 @@ export default class Player {
         });
     }
 
+    collide() {
+        const blinkCount = 3;
+        const blinkInterval = 100;
+        const immunityDuration = 3000;
+        
+        // Activer l'immunité
+        this.isImmune = true;
+    
+        // Faire clignoter le modèle
+        for (let i = 0; i < blinkCount; i++) {
+            setTimeout(() => {
+                this.model.visible = !this.model.visible;
+            }, blinkInterval * (2 * i + 1));
+    
+            setTimeout(() => {
+                this.model.visible = !this.model.visible;
+            }, blinkInterval * (2 * i + 2));
+        }
+
+        // descelerer le joueur
+        this.targetSpeed = Math.max(this.targetSpeed - this.deceleration, this.minSpeed);
+        
+        // Désactiver l'immunité après la durée spécifiée
+        setTimeout(() => {
+            this.isImmune = false;
+        }, immunityDuration);
+    }
+
+    eat() {
+        console.log(`Player ${this.id} ate a pizza!`);
+    }
+
     updatePosition() {
         this.model.position.x = (this.currentColumn - 1) * this.columnWidth;
     }
@@ -197,8 +247,6 @@ export default class Player {
         if (this.timeSinceLastPress > this.buttonPressInterval) {
             this.targetSpeed = Math.max(this.targetSpeed - this.deceleration * deltaSeconds, this.minSpeed);
         }
-
-
 
         // Smoothly interpolate current speed towards target speed
         const speedChangeRate = 5; // Adjust for desired responsiveness

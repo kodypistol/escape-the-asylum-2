@@ -14,6 +14,7 @@ export default [
             { name: 'strecherMesh', source: '/assets/strecher-mesh.glb', type: 'glb' },
             { name: 'chairMesh', source: '/assets/chair-mesh.glb', type: 'glb' },
             { name: 'playerRig', source: '/assets/exports/player_rig.glb', type: 'glb' },
+            { name: 'pizzaMesh', source: '/assets/pizza.glb', type: 'glb' },
         ],
     },
 ];
