@@ -5,12 +5,12 @@ import Experience from './Experience.js';
 import AnimationManager from './managers/AnimationManager.js';
 import gsap from 'gsap';
 
-
 export default class Player {
     constructor(_options) {
         this.id = _options.id;
         this.keys = _options.keys;
         this.position = _options.position;
+
         this.defaultAnimation = _options.defaultAnimation;
 
         this.experience = new Experience();
@@ -45,7 +45,7 @@ export default class Player {
             return;
         }
 
-        this.model = SkeletonUtils.clone(resourceModel.scene)
+        this.model = SkeletonUtils.clone(resourceModel.scene);
 
         // Apply transformations
         this.model.position.copy(this.position);
@@ -95,26 +95,24 @@ export default class Player {
                 this.animationManager.playAnimation('run_slide', false)
             }
         });
-        
-
     }
 
     handleJoystickQuickmoveHandler(event) {
-        if (event.direction === "left") {
+        if (event.direction === 'left') {
             console.log('left');
             this.moveRight();
         }
-        if (event.direction === "right") {
+        if (event.direction === 'right') {
             console.log('right');
             this.moveLeft();
         }
-        if (event.direction === "up") {
+        if (event.direction === 'up') {
             console.log('up');
             this.jump();
         }
-        if (event.direction === "down") {
+        if (event.direction === 'down') {
             console.log('down');
-            this.animationManager.playAnimation('run_slide', false)
+            this.animationManager.playAnimation('run_slide', false);
         }
     }
 
@@ -133,13 +131,13 @@ export default class Player {
 
             case 'w':
                 if (!this.experience.world.gameLogic.isPlayersInThreshold) {
-                    return
+                    return;
                 }
 
                 if (this.id === 1) {
-                    this.animationManager.playAnimation('dodge_right', false)
+                    this.animationManager.playAnimation('dodge_right', false);
                 } else if (this.id === 2) {
-                    this.animationManager.playAnimation('grab', false)
+                    this.animationManager.playAnimation('grab', false);
                 }
 
                 console.log(`Player ${this.id} won!`);
@@ -164,8 +162,8 @@ export default class Player {
     }
 
     jump() {
-         // Get the jump animation from the AnimationManager
-        this.animationManager.playAnimation('run_jump', false);       
+        // Get the jump animation from the AnimationManager
+        this.animationManager.playAnimation('run_jump', false);
 
         // Check if already jumping to avoid multiple jumps
         if (this.isJumping) return;
@@ -179,21 +177,21 @@ export default class Player {
 
         // GSAP tween to handle jump (up and down)
         gsap.to(this.model.position, {
-            y: jumpHeight,      // Move model up to the specified jump height
+            y: jumpHeight, // Move model up to the specified jump height
             duration: jumpDuration / 2, // Half the time for upward motion
-            ease: "power1.out",  // Easing for smooth deceleration
+            ease: 'power1.out', // Easing for smooth deceleration
             onComplete: () => {
                 // After reaching the peak, fall back down
                 gsap.to(this.model.position, {
-                    y: 0,       // Return to the ground
-                    duration: jumpDuration / 2,  // Second half of the jump
-                    ease: "power1.inOut", // A slight bounce effect upon landing
+                    y: 0, // Return to the ground
+                    duration: jumpDuration / 2, // Second half of the jump
+                    ease: 'power1.inOut', // A slight bounce effect upon landing
                     onComplete: () => {
                         // Jump complete, allow jumping again
                         this.isJumping = false;
-                    }
+                    },
                 });
-            }
+            },
         });
     }
 
@@ -270,6 +268,5 @@ export default class Player {
         }
         // Update position based on current speed
         this.model.position.z += this.speed * deltaSeconds;
-
     }
 }
