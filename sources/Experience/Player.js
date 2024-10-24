@@ -302,6 +302,11 @@ export default class Player {
                 this.instance.addEventListener('keydown', this.boundHandleInput);
             }
         })
+
+        tl.to(".controls", {
+            autoAlpha: 1,
+            duration: 1.5,
+        })
     }
     update(delta) {
         const deltaSeconds = delta / 1000;

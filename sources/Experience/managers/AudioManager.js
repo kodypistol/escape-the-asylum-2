@@ -20,6 +20,13 @@ export default class AudioManager {
       console.log('click');
     }
 
+    playEating() {  
+      // Add eating audio
+      this.eatingAudio = new Audio('assets/audio/eat.wav');
+      this.eatingAudio.play();
+      console.log('eating');
+
+    }
     update(delta) {
       // You could manage audio effects or adjustments here based on delta
     }

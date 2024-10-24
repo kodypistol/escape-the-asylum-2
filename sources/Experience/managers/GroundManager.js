@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Experience from '../Experience.js';
-
+import AudioManager from './AudioManager.js';
 export default class GroundManager {
     constructor() {
         this.experience = new Experience();
@@ -9,6 +9,8 @@ export default class GroundManager {
         this.tileLength = 20;
         this.nbTilesGenerated = 0;
         this.changeBiomEach = 10;
+
+        this.AudioManager = new AudioManager();
 
         // Use an array to store both models
         this.models = [
@@ -294,6 +296,7 @@ export default class GroundManager {
                             if (collider.name === 'pizza') {
                                 player.eat();
                                 const pizzaMesh = collider.parent;
+                                this.AudioManager.playEating();
                                 tile.remove(pizzaMesh);
                             } else if (!player.isImmune) {
                                 player.collide();
