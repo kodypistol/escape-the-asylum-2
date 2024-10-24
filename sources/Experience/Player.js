@@ -4,6 +4,7 @@ import Experience from './Experience.js';
 
 import AnimationManager from './managers/AnimationManager.js';
 import AudioManager from './managers/AudioManager.js';
+import AudioManager from './managers/AudioManager.js';
 import gsap from 'gsap';
 
 export default class Player {
