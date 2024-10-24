@@ -31,6 +31,8 @@ export default class Player {
         this.timeSinceLastPress = 0;
         this.buttonPressInterval = 0.2; // Seconds
         this.isImmune = false;
+        this.isStop = false;
+        this.life = 3;
 
         this.loadModel();
         this.setupInput();
@@ -78,7 +80,7 @@ export default class Player {
 
         // Add event listener for keydown events
         this.instance.addEventListener('keydown', (e) => this.handleInput(e));
-        this.axis[`joystick${this.id}`].addEventListener("joystick:quickmove",(e) => this.handleJoystickQuickmoveHandler(e));
+        this.axis[`joystick${this.id}`].addEventListener("joystick:quickmove", (e) => this.handleJoystickQuickmoveHandler(e));
 
         // set key arro left to move left without joystick
         document.addEventListener('keydown', (e) => {
@@ -138,9 +140,22 @@ export default class Player {
                     this.animationManager.playAnimation('dodge_right', false);
                 } else if (this.id === 2) {
                     this.animationManager.playAnimation('grab', false);
+                    const player1 = this.players[0];
+                    player1.life--;
+
+                    if (player1.life === 0) {
+                        console.log(`Player ${this.id} won!`);
+                        player1.animationManager.playAnimation('fall', false);
+                        player1.animationManager.end = true;
+                        this.isStop = true;
+                        player1.isStop = true;
+                        this.animationManager.end = true;
+                    } else {
+                        this.stop();
+                        // pause animation
+                    }
                 }
 
-                console.log(`Player ${this.id} won!`);
                 break;
             default:
                 break;
@@ -199,16 +214,16 @@ export default class Player {
         const blinkCount = 3;
         const blinkInterval = 100;
         const immunityDuration = 3000;
-        
+
         // Activer l'immunité
         this.isImmune = true;
-    
+
         // Faire clignoter le modèle
         for (let i = 0; i < blinkCount; i++) {
             setTimeout(() => {
                 this.model.visible = !this.model.visible;
             }, blinkInterval * (2 * i + 1));
-    
+
             setTimeout(() => {
                 this.model.visible = !this.model.visible;
             }, blinkInterval * (2 * i + 2));
@@ -216,7 +231,7 @@ export default class Player {
 
         // descelerer le joueur
         this.targetSpeed = Math.max(this.targetSpeed - this.deceleration, this.minSpeed);
-        
+
         // Désactiver l'immunité après la durée spécifiée
         setTimeout(() => {
             this.isImmune = false;
@@ -224,7 +239,16 @@ export default class Player {
     }
 
     eat() {
-        console.log(`Player ${this.id} ate a pizza!`);
+        // console.log(`Player ${this.id} ate a pizza!`);
+    }
+
+    stop() {
+        this.isStop = true;
+
+        setTimeout(() => {
+            this.isStop = false;
+        }, 400);
+
     }
 
     updatePosition() {
@@ -267,6 +291,9 @@ export default class Player {
             this.targetSpeed = Math.min(this.targetSpeed, player1Speed);
         }
         // Update position based on current speed
-        this.model.position.z += this.speed * deltaSeconds;
+        if (!this.isStop) {
+            // this.speed = 0;
+            this.model.position.z += this.speed * deltaSeconds;
+        }
     }
 }

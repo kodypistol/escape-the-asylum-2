@@ -8,6 +8,7 @@ export default class AnimationManager {
         this.activeAction = null;
         this.previousAction = null;
         this.player = player;
+        this.end = false;
 
         this.loadAnimations(animations);
     }
@@ -21,12 +22,16 @@ export default class AnimationManager {
     }
 
     playAnimation(name, isLooping = true) {
+
+        if (this.end) {
+            return;
+        }
+
         const action = this.actions[name];
         if (!action) {
             console.warn(`Animation ${name} not found`);
             return;
         }
-
 
         if (this.activeAction !== action) {
             this.previousAction = this.activeAction;
@@ -36,8 +41,8 @@ export default class AnimationManager {
             if (this.previousAction) {
                 this.previousAction.fadeOut(0.5);
             }
-            
-           if (!isLooping) {// Set the loop mode to only play the animation once
+
+            if (!isLooping) {// Set the loop mode to only play the animation once
                 this.activeAction.setLoop(LoopOnce);
                 this.activeAction.reset().fadeIn(0.5).play();
 
@@ -45,13 +50,19 @@ export default class AnimationManager {
                 this.activeAction.clampWhenFinished = true; // Keeps the model in the final pose
                 this.mixer.addEventListener('finished', () => {
                     // this.activeAction.stop(); // Stop the action once finished
-                    this.playAnimation(this.player.defaultAnimation); // Play the default animation                    
+                    this.playAnimation(this.player.defaultAnimation); // Play the default animation       
                 });
             } else {
                 // Play the animation with looping enabled
                 this.activeAction.setLoop(LoopRepeat);
                 this.activeAction.reset().fadeIn(0).play();
             }
+        }
+    }
+
+    pauseCurrentAnimation() {
+        if (this.activeAction) {
+            this.activeAction.paused = true;
         }
     }
 

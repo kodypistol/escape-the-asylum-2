@@ -36,7 +36,7 @@ export default class GameLogic {
 
         if (!frustum.containsPoint(headPosition) && !this.player2OutOfFOV) {
             this.player2OutOfFOV = true;
-            console.log('Player 1 wins! Player 2 is out of view.');
+            // console.log('Player 1 wins! Player 2 is out of view.');
             // Additional game-over logic here
         } else if (frustum.containsPoint(headPosition) && this.player2OutOfFOV) {
             this.player2OutOfFOV = false;
@@ -52,7 +52,7 @@ export default class GameLogic {
 
         if (distance < threshold && player1.model.position.x === player2.model.position.x) {
             this.isPlayersInThreshold = true
-            console.log('Players are within threshold distance!');
+            // console.log('Players are within threshold distance!');
         } else {
             this.isPlayersInThreshold = false
         }

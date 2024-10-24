@@ -12,9 +12,9 @@ export default class GroundManager {
 
         // Use an array to store both models
         this.models = [
-            // this.experience.resources.items['corridorMesh'],
-            // this.experience.resources.items['strecherMesh'],
-            // this.experience.resources.items['chairMesh'],
+            this.experience.resources.items['corridorMesh'],
+            this.experience.resources.items['strecherMesh'],
+            this.experience.resources.items['chairMesh'],
             this.experience.resources.items['slideMesh'],
         ];
 
